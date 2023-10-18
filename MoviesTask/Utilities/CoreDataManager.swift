@@ -9,14 +9,13 @@ import Foundation
 import CoreData
 import UIKit
 
-class CoreDataManager {
-    
-    static let shared = {
-        let instance = CoreDataManager()
-        return instance
-    }()
-    
-    private init() {}
+protocol CoreDataProtocol {
+    func saveMovies(movies: [Movie], completion: @escaping () -> Void)
+    func saveMovie(movie: Movie, completion: @escaping () -> Void)
+    func fetchMovies(string: String, min: Int) -> [CMovie]
+}
+
+class CoreDataManager: CoreDataProtocol {
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let request: NSFetchRequest<CMovie> = CMovie.fetchRequest()
@@ -51,7 +50,7 @@ class CoreDataManager {
         }
     }
     
-    func fetchMovies(string: String = "", min: Int) -> [CMovie] {
+    func fetchMovies(string: String , min: Int) -> [CMovie] {
         do {
             if !string.isEmpty {
                 request.predicate = NSPredicate(format: "title CONTAINS[c] %@", string)

@@ -8,19 +8,26 @@
 import Foundation
 
 final class MoviesViewModel {
-
+    
     var movies: [CMovie] = [CMovie]()
     lazy var pageNo: Int = 1
     lazy var isLoading: Bool = false
     var searchText: String = ""
+    var neteorkManager: NetworkProtocol
+    var dbManager:CoreDataProtocol
+    init(networkManager:NetworkProtocol = NetworkManager(),
+         coredata:CoreDataProtocol = CoreDataManager()) {
+        neteorkManager = networkManager
+        dbManager = coredata
+    }
     func load(completion: @escaping () -> Void) {
         isLoading = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
-            let mvs = CoreDataManager.shared.fetchMovies(string: searchText,min: (pageNo-1) * 20)
+            let mvs = self.dbManager.fetchMovies(string: searchText,min: (pageNo-1) * 20)
             if mvs.isEmpty {
                 getMovies(completion: completion)
             } else {
-                movies += CoreDataManager.shared.fetchMovies(min: (pageNo-1) * 20)
+                movies += self.dbManager.fetchMovies(string: "", min: (pageNo-1) * 20)
                 isLoading = false
                 pageNo += 1
                 completion()
@@ -38,14 +45,14 @@ final class MoviesViewModel {
         let model = MovieRequestModel(page: pageNo)
         let urlRequest = MovieRequest(queryParams: model.asDictionary).asURLRequest()!
         
-        NetworkManager.fetch(request: urlRequest) {  (result:Result<MovieResponseModel, NetworkRequestError>) in
+        neteorkManager.fetch(request: urlRequest) {  (result:Result<MovieResponseModel, NetworkRequestError>) in
             switch result {
             case .success(let resp):
                 if let movies = resp.results {
-                    CoreDataManager.shared.saveMovies(movies: movies) { [self] in
+                    self.dbManager.saveMovies(movies: movies) { [self] in
                         if self.isLoading {
                             sleep(2)
-                            let cMovies: [CMovie] = CoreDataManager.shared.fetchMovies(min: (pageNo-1) * 20)
+                            let cMovies: [CMovie] = self.dbManager.fetchMovies(string: "", min: (pageNo-1) * 20)
                             self.movies += cMovies
                             self.isLoading = false
                             self.pageNo += 1

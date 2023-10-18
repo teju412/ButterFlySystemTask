@@ -7,30 +7,88 @@
 
 import XCTest
 @testable import MoviesTask
+import CoreData
 
 final class MoviesTaskTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testIsReturnSuccessResultFromNetwork() {
+        let model = MockMovie()
+        model.title = "title"
+        let mockDBData = [model]
+        
+        let stub = createMockData(mockData: createMoviewModel(), errorCode: 0, isFailure: false, dbData: mockDBData)
+        
+        let expectation = expectation(description: "test")
+        
+        stub.load {
+            expectation.fulfill()
         }
+        wait(for: [expectation],timeout: 0.8)
+        
+        XCTAssertNotNil(stub.movies)
+        XCTAssertEqual(stub.movies.count, 1)
     }
+    
+    func testIsReturnFailureResultFromNetwork() {
+                
+        let stub = createMockData(mockData: createMoviewModel(), errorCode: 500, isFailure: true, dbData: [])
+        
+        let expectation = expectation(description: "test")
+        
+        stub.load {
+            expectation.fulfill()
+        }
+        wait(for: [expectation],timeout: 0.8)
+       
+        XCTAssertEqual(stub.movies.count, 0)
+    }
+    
+    func testSerchDataReturnSuccessData() {
+        let model = MockMovie()
+        model.title = "title"
+        let mockDBData = [model]
+        
+        let stub = createMockData(mockData: createMoviewModel(), errorCode: 0, isFailure: false, dbData: mockDBData)
+        
+        let expectation = expectation(description: "test")
+        
+        stub.search(completion: {
+            expectation.fulfill()
+        })
+        
+        wait(for: [expectation],timeout: 0.8)
+        
+        XCTAssertNotNil(stub.movies)
+        XCTAssertEqual(stub.movies.count, 1)
+    }
+    
+    
+    func createMoviewModel() -> MovieResponseModel {
+        let movies = Movie(id: 2, adult: true, backdrop_path: "", genre_ids: [1,2], original_language: "english", original_title: "test", overview: "test", popularity: nil, poster_path: nil, release_date: nil, title: "title", video: false, vote_average: nil, vote_count: nil)
+        
+        let model = MovieResponseModel(page: 1, results: [movies], total_pages: 1, total_results: 1)
+        return model
+    }
+    
+    func createMockData(mockData:MovieResponseModel,
+                       errorCode: Int,
+                        isFailure:Bool,
+                        dbData:[MockMovie]) -> MoviesViewModel {
+        
+        
+        let mockNetwork = MockNetworkManager(successResult: mockData, errorCode: errorCode,isFailure: isFailure)
+        
+        let mockDb = MockCoreDataManager(result:dbData)
+        
+        let viewModel = MoviesViewModel(networkManager: mockNetwork,coredata: mockDb)
+        
+        return viewModel
+        
+    }
+}
 
+class MockMovie : CMovie {
+    
+    init() {
+        super.init(entity: CMovie.entity(), insertInto: nil)
+    }
 }

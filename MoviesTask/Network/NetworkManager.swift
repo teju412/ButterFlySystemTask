@@ -52,10 +52,15 @@ extension Request{
     }
 }
 
+protocol NetworkProtocol {
+    func fetch<T:Codable>(request: URLRequest, completion: @escaping (Result<T, NetworkRequestError>) -> Void)
+    func httpError(_ statusCode: Int) -> NetworkRequestError
+    func handleError(_ error: Error) -> NetworkRequestError
+}
 
-struct NetworkManager {
+struct NetworkManager: NetworkProtocol {
     
-    static func fetch<T>(request: URLRequest, completion: @escaping (Result<T, NetworkRequestError>) -> Void) where T : Decodable {
+    func fetch<T:Codable>(request: URLRequest, completion: @escaping (Result<T, NetworkRequestError>) -> Void)  {
         URLSession.shared.dataTask(with: request) { [self] (data, response, error) in
             
             if let error = error {
@@ -96,7 +101,7 @@ struct NetworkManager {
     /// Parses a HTTP StatusCode and returns a proper error
     /// - Parameter statusCode: HTTP status code
     /// - Returns: Mapped Error
-    static func httpError(_ statusCode: Int) -> NetworkRequestError {
+     func httpError(_ statusCode: Int) -> NetworkRequestError {
         switch statusCode {
         case 400: return .badRequest
         case 401: return .unauthorized
@@ -112,7 +117,7 @@ struct NetworkManager {
     /// Parses URLSession Publisher errors and return proper ones
     /// - Parameter error: URLSession publisher error
     /// - Returns: Readable NetworkRequestError
-     static func handleError(_ error: Error) -> NetworkRequestError {
+      func handleError(_ error: Error) -> NetworkRequestError {
         switch error {
         case is Swift.DecodingError:
             return .decodingError

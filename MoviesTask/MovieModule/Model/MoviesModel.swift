@@ -15,14 +15,14 @@ struct MovieRequestModel: Encodable {
 
 
 // ResponseModel
-struct MovieResponseModel: Decodable {
+struct MovieResponseModel: Codable {
     let page: Int?
     let results: [Movie]?
     let total_pages: Int?
     let total_results: Int?
 }
 
-struct Movie: Decodable {
+struct Movie: Codable {
     let id: Int
     let adult: Bool?
     let backdrop_path: String?

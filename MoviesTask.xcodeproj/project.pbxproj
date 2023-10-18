@@ -30,6 +30,7 @@
 		54B447282ADF816A001AD612 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54B447262ADF816A001AD612 /* CoreDataManager.swift */; };
 		54B447292ADF816A001AD612 /* Constansts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54B447272ADF816A001AD612 /* Constansts.swift */; };
 		54B4472E2ADF83BA001AD612 /* MoviesTask.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 54B4472C2ADF83BA001AD612 /* MoviesTask.xcdatamodeld */; };
+		54B447302ADFA90B001AD612 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54B4472F2ADFA90B001AD612 /* MockData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		54B447262ADF816A001AD612 /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		54B447272ADF816A001AD612 /* Constansts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constansts.swift; sourceTree = "<group>"; };
 		54B4472D2ADF83BA001AD612 /* MoviesTask.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MoviesTask.xcdatamodel; sourceTree = "<group>"; };
+		54B4472F2ADFA90B001AD612 /* MockData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				54B446EC2ADF757D001AD612 /* MoviesTaskTests.swift */,
+				54B4472F2ADFA90B001AD612 /* MockData.swift */,
 			);
 			path = MoviesTaskTests;
 			sourceTree = "<group>";
@@ -405,6 +408,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				54B446ED2ADF757D001AD612 /* MoviesTaskTests.swift in Sources */,
+				54B447302ADFA90B001AD612 /* MockData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
