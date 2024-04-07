@@ -23,7 +23,7 @@ class MovieViewController: UIViewController {
                 self.tblView.reloadData()
             }
         }
-        print("Git working Here")
+        print("Git working Here but I'm trying to void the data model in view")
     }
     
     func registerNib() {
