@@ -24,6 +24,7 @@ class MovieViewController: UIViewController {
             }
         }
         print("working on Develop Brannch")
+        print("Statement2")
     }
     
     func registerNib() {
