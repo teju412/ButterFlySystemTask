@@ -23,6 +23,7 @@ class MovieViewController: UIViewController {
                 self.tblView.reloadData()
             }
         }
+        print("Git working Here")
     }
     
     func registerNib() {
